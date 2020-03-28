@@ -96,3 +96,54 @@ Order.hasMany(LineItem);
 
 LineItem.belongsTo(Product);
 Product.hasMany(LineItem);
+
+
+const mapAndSave = async(model, items) => Promise.all(await items.map(item => model.create(item)));
+
+const syncAndSeed = async () => {
+
+  await db.sync({ force: true });
+
+  const users = [
+    {
+      name: 'Billy Hill',
+      email: 'bHill@gmail.com',
+      password: hash('12345', process.env.SALT)
+    },
+    {
+      name: 'John Ford',
+      email: 'jFord@gmail.com',
+      password: hash('12345', process.env.SALT)
+    },
+    {
+      name: 'Anna Lane',
+      email: 'aLane@gmail.com',
+      password: hash('12345', process.env.SALT)
+    },
+    {
+      name: 'May Taylor',
+      email: 'mTaylor@gmail.com',
+      password: hash('12345', process.env.SALT)
+    },
+    {
+      name: 'James Romero',
+      email: 'jRomero@gmail.com',
+      password: hash('12345', process.env.SALT)
+    }
+  ];
+
+
+  const [billy, john, anna, may, james] = await mapAndSave(User, users);
+};
+
+
+module.exports = {
+  syncAndSeed,
+  models: {
+    Guest,
+    LineItem,
+    Order,
+    Product,
+    User
+  }
+}
